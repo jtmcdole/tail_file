@@ -1,9 +1,9 @@
-name: tail_file
+name: tailf 
 description: |
   A pure dart implementation of `tail -f` for Windows, Linux, and MacOS.
   Provides a stream of `Uint8Bytes`, `String`, or split by lines.
   Includes a helpful `WatchPath` for when you want to monitor file rotations.
-version: 1.0.0
+version: 1.0.1
 repository: https://github.com/jtmcdole/tail_file
 environment:
   sdk: ^3.5.0
