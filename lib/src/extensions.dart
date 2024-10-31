@@ -1,5 +1,5 @@
 import 'dart:convert';
-import '../tail_file.dart';
+import '../tailf.dart';
 
 /// Convert the stream of bytes to utf8 strings.
 extension TailString on TailFile {

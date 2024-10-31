@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
-import '../tail_file.dart';
+import '../tailf.dart';
 
 class TailFileBase implements TailFile {
   final File file;

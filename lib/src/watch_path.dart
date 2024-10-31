@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:collection/collection.dart';
 
-import '../tail_file.dart';
+import '../tailf.dart';
 
 class WatchPathBase implements WatchPath {
   @override

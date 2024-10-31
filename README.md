@@ -55,8 +55,8 @@ flutter test --coverage
 coverde check -i coverage/lcov.info 100
 
 lib/src/extensions.dart (100.00% - 2/2)
-lib/tail_file.dart (100.00% - 3/3)
-lib/src/tail_file.dart (100.00% - 33/33)
+lib/tailf.dart (100.00% - 3/3)
+lib/src/tailf.dart (100.00% - 33/33)
 lib/src/watch_path.dart (100.00% - 22/22)
 
 GLOBAL:

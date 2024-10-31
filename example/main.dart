@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:tailf/tail_file.dart';
+import 'package:tailf/tailf.dart';
 
 main() async {
   final tail = TailFile(File('/var/log/syslog'));

@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:tailf/tail_file.dart';
+import 'package:tailf/tailf.dart';
 import 'package:path/path.dart' as path;
 import 'package:test/test.dart';
 
