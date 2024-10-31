@@ -6,6 +6,8 @@ import 'dart:typed_data';
 import 'src/tail_file.dart';
 import 'src/watch_path.dart';
 
+export 'src/extensions.dart';
+
 /// Read a stream of bytes from a file as it is written to.
 abstract class TailFile {
   int get position;

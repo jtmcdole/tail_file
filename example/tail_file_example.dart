@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:tail_file/src/extensions.dart';
 import 'package:tail_file/tail_file.dart';
 
 main() async {

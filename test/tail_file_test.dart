@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:path/path.dart' as path;
-import 'package:tail_file/src/extensions.dart';
 import 'package:tail_file/tail_file.dart';
 import 'package:test/test.dart';
 
