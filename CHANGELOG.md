@@ -1,3 +1,7 @@
+## 1.1.1
+
+- Add `bin/tailf.dart` and `executables:` for pub global activating
+
 ## 1.1.0
 
 - Rewrite of tests as dart:io is sketchy when under test; instead we'll use
