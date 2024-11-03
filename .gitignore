@@ -7,3 +7,6 @@
 pubspec.lock
 build
 coverage
+
+# Dumb tests
+delete-me-test-*/

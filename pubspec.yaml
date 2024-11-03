@@ -1,6 +1,6 @@
 name: tailf 
 description: A pure dart implementation of `tail -f` providing a stream of `Uint8Bytes`, `String`, or split by lines.
-version: 1.0.2
+version: 1.1.0
 repository: https://github.com/jtmcdole/tail_file
 environment:
   sdk: ^3.5.0
@@ -9,6 +9,6 @@ dependencies:
   collection: ^1.19.1
 
 dev_dependencies:
-  lints: ^4.0.0
+  lints: ^5.0.0
   path: ^1.9.1
   test: ^1.24.0

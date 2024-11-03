@@ -4,14 +4,14 @@ import 'package:tailf/tailf.dart';
 import 'package:path/path.dart' as path;
 import 'package:test/test.dart';
 
-const tiny = Duration(milliseconds: 400);
+const tiny = Duration(milliseconds: 500);
 
 void main() {
   group('watching a path', () {
     late Directory temp;
 
     setUp(() async {
-      temp = await Directory.current.createTemp('deleteme-test-');
+      temp = await Directory.current.createTemp('delete-me-test-');
     });
 
     tearDown(() {
