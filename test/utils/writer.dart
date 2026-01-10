@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-main(List<String> args) async {
+void main(List<String> args) async {
   File? file;
   IOSink? sink;
 

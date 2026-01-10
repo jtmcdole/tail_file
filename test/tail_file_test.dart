@@ -137,7 +137,7 @@ void main() {
       await writer.quit();
 
       // Delay for macos (sigh)
-      await Future.delayed(Duration(milliseconds:500));
+      await Future.delayed(Duration(milliseconds: 500));
 
       expect(emitted, [Uint8List.fromList('1234'.codeUnits)]);
       expect(await File(filePath).readAsString(), '1234');
@@ -164,7 +164,6 @@ void main() {
       // Delay for macos (sigh)
       await Future.delayed(Duration(milliseconds: 200));
 
-
       expect(emitted, [
         Uint8List.fromList('first line\nsecond line\n'.codeUnits),
         Uint8List.fromList('1234'.codeUnits)
@@ -189,9 +188,8 @@ void main() {
       await writer.close();
       await writer.quit();
 
-            // Delay for macos (sigh)
+      // Delay for macos (sigh)
       await Future.delayed(Duration(milliseconds: 200));
-
 
       expect(emitted, ['1234\n5678']);
     });
@@ -218,6 +216,52 @@ void main() {
       await Future.delayed(Duration(milliseconds: 200));
 
       expect(emitted, ['1234', '5678']);
+    });
+
+    Future<void> writeLineAndClose(String file, String string) async {
+      await writer.open(file);
+      await writer.write('$string\n');
+      await writer.close();
+    }
+
+    test("handles events from the same directory", () async {
+      final file1 = path.join(temp.path, 'file1');
+      final file2 = path.join(temp.path, 'file2');
+
+      // Initialize files
+      await writeLineAndClose(file1, 'initial');
+      await writeLineAndClose(file2, 'initial2');
+
+      tail = TailFile(File(file1));
+      final tail2 = TailFile(File(file2));
+
+      final s1 = <String>[];
+      final s2 = <String>[];
+
+      tail.asLines.listen(s1.add);
+      tail2.asLines.listen(s2.add);
+
+      await Future.delayed(
+          Duration(milliseconds: 100)); // wait for tails to start
+
+      // Write to file 2. tail should ignore, tail2 should see.
+      await writeLineAndClose(file1, 'l1f1');
+      await writeLineAndClose(file2, 'l1f2');
+
+      await Future.delayed(Duration(milliseconds: 200));
+      await writeLineAndClose(file1, 'l2f1');
+      await writeLineAndClose(file2, 'l2f2');
+
+      await Future.delayed(Duration(milliseconds: 200));
+
+      // Write to file 1. tail2 should ignore, tail should see.
+
+      await tail.close();
+      await tail2.close();
+      await writer.quit();
+
+      expect(s1, ['l1f1', 'l2f1']);
+      expect(s2, ['l1f2', 'l2f2']);
     });
   });
 }
@@ -262,7 +306,7 @@ class LoneWriter {
     return nextLine;
   }
 
-  _send(String data) {
+  void _send(String data) {
     _process!.stdin.writeln(data);
   }
 
