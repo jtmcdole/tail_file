@@ -1,10 +1,9 @@
 import 'dart:io';
-
 import 'package:tailf/tailf.dart';
 
-main() async {
-  final tail = TailFile(File('/var/log/syslog'));
+void main() async {
+  final tail = TailFile(File('example/main.dart'), seekToEnd: false);
   await for (var line in tail.asLines) {
-    print('system log: $line');
+    print(line);
   }
 }

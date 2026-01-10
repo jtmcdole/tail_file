@@ -9,7 +9,7 @@ final parser = ArgParser()
   ..addFlag('help', abbr: 'h', help: 'this help')
   ..addFlag('debug-file', abbr: 'f', help: 'print filename on lines');
 
-main(List<String> arguments) async {
+void main(List<String> arguments) async {
   final args = parser.parse(arguments);
   if (args.rest.isEmpty) {
     stderr.writeln('error; file argument missing');
@@ -29,20 +29,20 @@ main(List<String> arguments) async {
   logFile(String filePath) async {
     final tail = TailFile(File(filePath));
     final filename = path.basename(filePath);
-    final writers = {
-      (true, true): (String line) => stdout
+
+    final writer = switch ((debugTime, debugFile)) {
+      (true, true) => (String line) => stdout
           .writeln('[${DateTime.now().toIso8601String()} $filename]: $line'),
-      (true, false): (String line) =>
+      (true, false) => (String line) =>
           stdout.writeln('[${DateTime.now().toIso8601String()}]: $line'),
-      (false, true): (String line) => stdout.writeln('[$filename]: $line'),
-      (false, false): (String line) => stdout.writeln(line),
+      (false, true) => (String line) => stdout.writeln('[$filename]: $line'),
+      (false, false) => (String line) => stdout.writeln(line),
     };
-    final writer = writers[(debugTime, debugFile)]!;
     await for (var line in tail.asLines) {
       writer(line);
     }
   }
-  
+
   for (var file in args.rest) {
     logFile(file);
   }

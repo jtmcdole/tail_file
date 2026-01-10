@@ -8,36 +8,55 @@ import '../tailf.dart';
 class WatchPathBase implements WatchPath {
   @override
   Stream<FileEvent> forPattern(Directory dir, RegExp pattern) {
-    final controller = StreamController<FileEvent>();
+    late StreamController<FileEvent> controller;
+    StreamSubscription<FileSystemEvent>? subscription;
 
-    bool signaled = false;
-    () async {
-      // imediatly start watching for files in case there's a ton to process
-      await for (final event in dir.watch(events: FileSystemEvent.create)) {
-        if (event is! FileSystemCreateEvent) continue;
-        if (pattern.firstMatch(event.path) != null) {
-          signaled = true;
-          controller.add((file: File(event.path), existed: false));
-        }
-      }
-    }();
-    () async {
-      final initFiles = (await dir.list().where((entity) {
-        if (entity is! File) return false;
-        return pattern.firstMatch(entity.uri.path) != null;
-      }).toList());
+    controller = StreamController<FileEvent>(
+      onListen: () {
+        bool signaled = false;
+        subscription =
+            dir.watch(events: FileSystemEvent.create).listen((event) {
+          if (event is! FileSystemCreateEvent) return;
+          if (pattern.firstMatch(event.path) != null) {
+            signaled = true;
+            controller.add((file: File(event.path), existed: false));
+          }
+        }, onError: (e, s) {
+          if (!controller.isClosed) controller.addError(e, s);
+        });
 
-      var records = <(File, DateTime)>[];
-      for (var file in initFiles) {
-        records.add(((file as File), await file.lastModified()));
-      }
-      mergeSort(records,
-          compare: (l, r) => r.$2.difference(l.$2).inMilliseconds);
+        () async {
+          try {
+            final initFiles = (await dir.list().where((entity) {
+              if (entity is! File) return false;
+              return pattern.firstMatch(entity.uri.path) != null;
+            }).toList());
 
-      if (records.isNotEmpty && signaled == false) {
-        controller.add((file: records.first.$1, existed: true));
-      }
-    }();
+            var records = <(File, DateTime)>[];
+            for (var file in initFiles) {
+              if (controller.isClosed) return;
+              try {
+                records.add(((file as File), await file.lastModified()));
+              } catch (_) {}
+            }
+
+            if (controller.isClosed) return;
+
+            mergeSort(records,
+                compare: (l, r) => r.$2.difference(l.$2).inMilliseconds);
+
+            if (records.isNotEmpty && signaled == false) {
+              controller.add((file: records.first.$1, existed: true));
+            }
+          } catch (e, s) {
+            if (!controller.isClosed) controller.addError(e, s);
+          }
+        }();
+      },
+      onCancel: () async {
+        await subscription?.cancel();
+      },
+    );
     return controller.stream;
   }
 }

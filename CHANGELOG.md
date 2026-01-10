@@ -1,3 +1,8 @@
+## 1.1.2
+
+- Fix listening to multiple files in the same windows directory.
+- dartisms
+
 ## 1.1.1
 
 - Add `bin/tailf.dart` and `executables:` for pub global activating

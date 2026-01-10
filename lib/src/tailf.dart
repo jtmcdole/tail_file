@@ -35,7 +35,7 @@ class TailFileBase implements TailFile {
     await _updates?.cancel();
   }
 
-  _start() async {
+  Future<void> _start() async {
     if (await file.exists() != true) {
       _controller.addError(ArgumentError('file does not exist: ${file.path}'));
       return;
@@ -75,7 +75,10 @@ class TailFileBase implements TailFile {
       await for (var event in ctl.stream) {
         if (event is! FileSystemModifyEvent ||
             event.path != file.path ||
-            !event.contentChanged) return;
+            !event.contentChanged) {
+          // On windows, we will get updates out all the files in the folder.
+          continue;
+        }
         int length = await raf.length();
         if (length < _position) {
           // truncation - get a new raf and slurp data.
